@@ -7,6 +7,7 @@ Itunes parcer
 import xml.etree.ElementTree as ET
 import sqlite3
 import os
+from tabulate import tabulate
 
 #используем менеджер контекста для открытия и закрытия соединения с базой данных
 with sqlite3.connect('music.sqlite') as conn: 
@@ -52,7 +53,7 @@ fname = input('Enter file name: ')
 if not fname or not os.path.isfile(fname):
     print(f"File {fname} does not exist")
     fname = 'Library.xml'
-
+    #fname = 'Медиатека.xml'
 # Определяется функция lookup(), которая принимает на вход xml-дерево и ключ для поиска   
 def lookup(d, key):
     found = False
@@ -86,7 +87,7 @@ with sqlite3.connect('music.sqlite') as conn:
         if name is None or artist is None or album is None or genre is None: 
             continue
 
-        print(name, artist, album,  genre, count, rating, length)
+        #print(name, artist, album,  genre, count, rating, length)
         
         cur.execute('''INSERT OR IGNORE INTO Artist (name) 
             VALUES ( ? )''', ( artist, ) )
@@ -111,7 +112,20 @@ with sqlite3.connect('music.sqlite') as conn:
             VALUES ( ?, ?, ?, ?, ?, ?)''', 
             ( name, album_id, genre_id, length, rating, count ) )
 
-        conn.commit()    
+        conn.commit() 
+               
+with sqlite3.connect('music.sqlite') as conn: 
+    cur = conn.cursor()          
+    cur.execute('''
+    SELECT Track.title, Artist.name, Album.title, Genre.name 
+    FROM Track JOIN Genre JOIN Album JOIN Artist 
+    ON Track.genre_id = Genre.ID and Track.album_id = Album.id 
+        AND Album.artist_id = Artist.id
+    ORDER BY Track.title LIMIT 10
+    ''' )
+    rows = cur.fetchall()
+    headers = ['Название песни', 'Имя исполнителя', 'Название альбома', 'Жанр']
+    print(tabulate(rows, headers=headers))  
     
 
         

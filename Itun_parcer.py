@@ -112,7 +112,7 @@ with sqlite3.connect('music.sqlite') as conn:
             VALUES ( ?, ?, ?, ?, ?, ?)''', 
             ( name, album_id, genre_id, length, rating, count ) )
 
-        conn.commit() 
+    conn.commit() 
         
 # Выполняем запрос на выборку данных из базы данных            
 with sqlite3.connect('music.sqlite') as conn: 

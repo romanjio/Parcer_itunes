@@ -113,7 +113,8 @@ with sqlite3.connect('music.sqlite') as conn:
             ( name, album_id, genre_id, length, rating, count ) )
 
         conn.commit() 
-               
+        
+# Выполняем запрос на выборку данных из базы данных            
 with sqlite3.connect('music.sqlite') as conn: 
     cur = conn.cursor()          
     cur.execute('''
@@ -123,6 +124,8 @@ with sqlite3.connect('music.sqlite') as conn:
         AND Album.artist_id = Artist.id
     ORDER BY Track.title LIMIT 10
     ''' )
+    
+    # Формирует таблицу с результатами и выводим ее в консоль с заданными заголовками
     rows = cur.fetchall()
     headers = ['Название песни', 'Имя исполнителя', 'Название альбома', 'Жанр']
     print(tabulate(rows, headers=headers))  

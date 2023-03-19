@@ -31,7 +31,7 @@ with sqlite3.connect('music.sqlite') as conn:
     
     CREATE TABLE Album (
         id  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-        artist_id  INTEGER,
+        artist_id  INTEGER REFERENCES Artist(id),
         title   TEXT UNIQUE
     );
     
@@ -39,8 +39,8 @@ with sqlite3.connect('music.sqlite') as conn:
         id  INTEGER NOT NULL PRIMARY KEY 
             AUTOINCREMENT UNIQUE,
         title TEXT  UNIQUE,
-        album_id  INTEGER,
-        genre_id  INTEGER,
+        album_id  INTEGER REFERENCES Album(id),
+        genre_id  INTEGER REFERENCES Genre(id),
         len INTEGER, rating INTEGER, count INTEGER
     );
     ''')
